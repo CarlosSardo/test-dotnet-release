@@ -6,7 +6,7 @@ on:
       dotnetSolution:
         description: 'VS solution'
         required: true
-        default: "**/TestConsoleApp.sln"
+        default: "src/TestConsoleApp.sln"
       anonymizerProject:
         description: 'Anonymizer Tool VS solution'
         required: true
