@@ -6,7 +6,7 @@ on:
       dotnetSolution:
         description: 'VS solution'
         required: true
-        default: "src/TestConsoleApp.sln"
+        default: "**/TestConsoleApp.sln"
       anonymizerProject:
         description: 'Anonymizer Tool VS solution'
         required: true
@@ -42,9 +42,12 @@ jobs:
  
     - name: Restore
       run: dotnet restore ${{ github.event.inputs.dotnetSolution }}
+      working-directory: src
  
     - name: Build
       run: dotnet build ${{ github.event.inputs.dotnetSolution }} --configuration Release --no-restore
+      working-directory: src
  
     - name: Test
       run: dotnet test ${{ github.event.inputs.dotnetSolution }} --no-restore --logger trx --collect:"XPlat Code Coverage"
+      working-directory: src
