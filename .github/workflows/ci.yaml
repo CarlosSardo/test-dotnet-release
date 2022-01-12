@@ -1,0 +1,50 @@
+name: CI Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      dotnetSolution:
+        description: 'VS solution'
+        required: true
+        default: "**/TestConsoleApp.sln"
+      anonymizerProject:
+        description: 'Anonymizer Tool VS solution'
+        required: true
+        default: "**/Microsoft.Health.Fhir.Anonymizer.R4.CommandLineTool.csproj"
+      anonymizerVersion:
+        description: 'Anonymizer Tool version'
+        required: true
+        default: v3.0.0
+
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+
+  build:
+ 
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+    - uses: actions/checkout@v2
+ 
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+          dotnet-version:  5.0.x 
+ 
+    - name: Restore
+      run: dotnet restore ${{ github.event.inputs.dotnetSolution }}
+ 
+    - name: Build
+      run: dotnet build ${{ github.event.inputs.dotnetSolution }} --configuration Release --no-restore
+ 
+    - name: Test
+      run: dotnet test ${{ github.event.inputs.dotnetSolution }} --no-restore --logger trx --collect:"XPlat Code Coverage"
