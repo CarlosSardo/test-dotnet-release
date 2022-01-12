@@ -63,6 +63,6 @@ jobs:
       working-directory: src
 
     - name: Publish
-      run: dotnet publish ${{ github.event.inputs.dotnetSolution }} --configuration Release --output /.output -p:PublishSingleFile=true -r ${{matrix.TARGET}} --self-contained ${{matrix.SELFCONTAINED}}  -p:DebugType=None -p:DebugSymbols=false
+      run: dotnet publish ${{ github.event.inputs.dotnetSolution }} --configuration Release -p:PublishSingleFile=true -p:UseAppHost=true -r ${{matrix.TARGET}} --self-contained ${{matrix.SELFCONTAINED}}  -p:DebugType=None -p:DebugSymbols=false
       working-directory: src
 
