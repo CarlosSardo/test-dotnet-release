@@ -31,6 +31,16 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
+        include:
+        - os: ubuntu-latest
+          LABEL: linux
+          TARGET: linux-x64
+          SELFCONTAINED: true
+
+        - os: windows-latest
+          LABEL: windows
+          TARGET: win-x64
+          SELFCONTAINED: false
 
     steps:
     - uses: actions/checkout@v2
@@ -51,3 +61,8 @@ jobs:
     - name: Test
       run: dotnet test ${{ github.event.inputs.dotnetSolution }} --no-restore --logger trx --collect:"XPlat Code Coverage"
       working-directory: src
+
+    - name: Publish
+      run: dotnet publish ${{ github.event.inputs.dotnetSolution }} --configuration Release --output /.output -p:PublishSingleFile=true -r ${{matrix.TARGET}} --self-contained ${{matrix.SELFCONTAINED}}  -p:DebugType=None -p:DebugSymbols=false
+      working-directory: src
+
